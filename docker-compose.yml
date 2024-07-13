@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    ports:
+      - "8081:8000"
+    networks:
+      - bff-network
+    depends_on:
+      - client
+
+  client:
+    image: mongo:latest
+    ports:
+      - "27009:27017"
+    networks:
+      - bff-network
+    volumes:
+      - mongodb_data:/data/db
+
+  dbseed:
+    build: ./dbseed
+    networks:
+      - bff-network
+    depends_on:
+      - client
+
+volumes:
+  mongodb_data:
+
+networks:
+  bff-network:
+    external: true
